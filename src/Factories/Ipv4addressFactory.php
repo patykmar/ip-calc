@@ -5,6 +5,7 @@ namespace App\Factories;
 
 
 use App\Entity\IP\v4\Ipv4address;
+use App\Entity\IP\v4\Ipv4subnet;
 use InvalidArgumentException;
 
 class Ipv4addressFactory
@@ -82,6 +83,64 @@ class Ipv4addressFactory
         } else {
             throw new InvalidArgumentException("Input is not in valid format");
         }
+    }
+
+    /**
+     * Based on parameter $bit can calculate network or broadcast instance of Ipv4address
+     * @param Ipv4subnet $ipv4subnet
+     * @param string $bit
+     * @return Ipv4address
+     */
+    public static function calculateNetworkOrBroadcastAddress(Ipv4subnet $ipv4subnet, string $bit = "1"): Ipv4address
+    {
+        // check $bit for only permit value
+        if ($bit == "0" or $bit == "1") {
+            $addBin_local = $ipv4subnet->ipv4Address->getBinary();
+            $netCidr_local = $ipv4subnet->ipv4Netmask->getCidr();
+            $addBroBin_local = "";
+
+            for ($i = 0; $i < strlen($addBin_local); $i++) {
+                if ($i < $netCidr_local) {
+                    $addBroBin_local .= $addBin_local[$i];
+                } else {
+                    $addBroBin_local .= $bit;
+                }
+            }
+            unset($addBin_local, $netCidr_local);
+            return Ipv4addressFactory::binToDec($addBroBin_local);
+        }
+
+        // $bit is something else
+        throw new InvalidArgumentException("Bit can be only 0 or 1");
+    }
+
+
+    /**
+     * Based on argument $addressPosition calculate first, second, etc. address
+     * @param Ipv4subnet $ipv4subnet
+     * @param int $addressPosition
+     * @return Ipv4address
+     */
+    public static function setAddressOfSubnet(Ipv4subnet $ipv4subnet, int $addressPosition = 1): Ipv4address
+    {
+        // 32-1 or 32-2, define upper limit of netmask
+        $cidrUpperLimit = self::IPV4_NETMASK_CIDR_VALUE_MAX - $addressPosition;
+
+
+        if ($ipv4subnet->ipv4Netmask->getCidr() < $cidrUpperLimit) {
+            // netmask CIDR is lower than upper limit I can calculate address in IP range
+            $addNet_local = $ipv4subnet->ipv4AddressNetwork->getInteger();
+            $requiredAddressInt = $addNet_local + $addressPosition;
+            return Ipv4addressFactory::binToDec(
+                str_pad(decbin($requiredAddressInt),
+                    self::IPV4_NETMASK_CIDR_VALUE_MAX, "0", STR_PAD_LEFT));
+        } elseif ($ipv4subnet->ipv4Netmask->getCidr() == $cidrUpperLimit) {
+            return $ipv4subnet->ipv4LastAddress;
+        } else {
+            // netmask is in range /31 - /32
+            return $ipv4subnet->ipv4Address;
+        }
+
     }
 
 
