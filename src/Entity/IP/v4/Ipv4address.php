@@ -6,12 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace App\Classes\IP\v4;
+namespace App\Entity\IP\v4;
 
 use App\Classes\Ip\Ip;
 use InvalidArgumentException;
-use Symfony\Component\String\UnicodeString;
-use function Symfony\Component\String\u;
 
 /**
  * Description of Ipv4address
@@ -20,6 +18,8 @@ use function Symfony\Component\String\u;
  */
 class Ipv4address extends Ip
 {
+    /** @var int how many numbers are in one IP address octet */
+    protected const OCTET_LEN = 8;
 
     /** @var string Human readable address eg. 192.168.1.1 */
     private string $decadic;
@@ -63,7 +63,7 @@ class Ipv4address extends Ip
         $outputIP = "";
         foreach ($this->getAddressArray() as $item) {
             $IPbin = decbin((int)$item);
-            $outputIP .= str_pad($IPbin, 8, "0", STR_PAD_LEFT);
+            $outputIP .= str_pad($IPbin, self::OCTET_LEN, "0", STR_PAD_LEFT);
         }
         $this->binary = $outputIP;
     }
@@ -127,7 +127,7 @@ class Ipv4address extends Ip
                     'min_range' => 1,
                     'max_range' => 32
                 )))):
-            $IpArray = str_split($inputIP, 8);
+            $IpArray = str_split($inputIP, self::OCTET_LEN);
             $ipOutput = "";
             foreach ($IpArray as $item):
                 $ipOutput .= bindec($item) . ".";
@@ -139,14 +139,13 @@ class Ipv4address extends Ip
         endif;
     }
 
-    public function setAddressArray(string $address): void
+    /**
+     * based on decadic format of IP address create array of octet
+     */
+    protected function setAddressArray(): self
     {
-        // array of UnicodeString object
-        $ipAdd = u($address)->split(".");
-
-        // unwrapped UnicodeString object to simple string array
-        $ipAdd = UnicodeString::unwrap($ipAdd);
-
+        $ipAdd = explode('.', $this->decadic);
         $this->addressArray = $ipAdd;
+        return $this;
     }
 }
