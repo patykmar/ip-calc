@@ -1,12 +1,17 @@
 <?php
 
 
-namespace App\Classes\IP\Model;
+namespace App\Model;
 
 
 
 class Ipv4NetworkModel
 {
+    /**
+     * @var integer how many iteration will be use in function getCidrAndNetwork()
+     */
+    public const COUNT_OF_ITERATION = 5;
+
     public const CIDR_TO_NETWORK = array(
         1 => "128.0.0.0",
         2 => "192.0.0.0",
@@ -76,8 +81,7 @@ class Ipv4NetworkModel
         32 => "/32 - 255.255.255.255"
     );
 
-    /** @var integer how many iteration will be use in function getCidrAndNetwork() */
-    public const COUNT_OF_ITERATION = 5;
+
 
     /**
      * Based on CIDR number return array with smaller networks
