@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Classes\IP\v4;
+namespace App\Entity\IP\v4;
 
+use App\Factories\Ipv4addressFactory;
 use InvalidArgumentException;
-use Symfony\Component\String\UnicodeString;
-use function Symfony\Component\String\u;
 
 /**
  * Description of Ipv4subnet
@@ -13,7 +12,6 @@ use function Symfony\Component\String\u;
  */
 class Ipv4subnet
 {
-
     /** @var Ipv4address IPv4 address object */
     public Ipv4address $ipv4Address;
 
@@ -39,27 +37,24 @@ class Ipv4subnet
     {
         // $ipv4SubnetArray[0] -> Ipv4address
         // $ipv4SubnetArray[1] -> Ipv4netmask
-        $ipv4SubnetArray = u($subnet)
-            ->trim()
-            ->split("/");
-        $ipv4SubnetArray = UnicodeString::unwrap($ipv4SubnetArray);
+        $ipv4SubnetArray = explode('/', trim($subnet));
 
         // standard format ip address/mask eg. 10.0.0.0/24
         if (count($ipv4SubnetArray) == 2) {
             if (filter_var($ipv4SubnetArray[1], FILTER_VALIDATE_INT,
                 array(
                     'options' => array(
-                        'min_range' => 1,
-                        'max_range' => 32,
+                        'min_range' => Ipv4netmask::IPV4_NETMASK_CIDR_VALUE_MIN,
+                        'max_range' => Ipv4netmask::IPV4_NETMASK_CIDR_VALUE_MAX,
                     )))) {
                 $this->ipv4Address = new Ipv4address($ipv4SubnetArray[0]);
                 $this->ipv4Netmask = new Ipv4netmask($ipv4SubnetArray[1]);
 
-                $this->setNetworkAddress();
-                $this->setBroadcastkAddress();
-                $this->setFirstAddressOfSubnet();
-                $this->setLastAddressOfSubnet();
-                $this->setSecondAddressOfSubnet();
+                $this->setNetworkAddress()
+                    ->setBroadcastkAddress()
+                    ->setFirstAddressOfSubnet()
+                    ->setLastAddressOfSubnet()
+                    ->setSecondAddressOfSubnet();
             } else {
                 throw new InvalidArgumentException("Netmask is in wrong range");
             }
@@ -70,135 +65,66 @@ class Ipv4subnet
 
     /**
      * Compute network address based on address and network mask
+     * @return self
      */
-    private function setNetworkAddress(): void
+    private function setNetworkAddress(): self
     {
-        $addBin_local = $this->ipv4Address->getBinary();
-        $netCidr_local = $this->ipv4Netmask->getCidr();
-        $addNetBin_local = "";
-
-        for ($i = 0; $i < strlen($addBin_local); $i++):
-            if ($i < $netCidr_local):
-                $addNetBin_local .= $addBin_local[$i];
-            else:
-                $addNetBin_local .= "0";
-            endif;
-        endfor;
-
-        $this->ipv4AddressNetwork = Ipv4address::binToDec($addNetBin_local);
-        unset($addBin_local, $netCidr_local, $addNetBin_local);
+        $this->ipv4AddressNetwork = Ipv4addressFactory::calculateNetworkOrBroadcastAddress($this, "0");
+        return $this;
     }
 
     /**
      * Compute Broadcast address based on address and network mask
+     * @return self
      */
-    private function setBroadcastkAddress(): void
+    private function setBroadcastkAddress(): self
     {
-        $addBin_local = $this->ipv4Address->getBinary();
-        $netCidr_local = $this->ipv4Netmask->getCidr();
-        $addBroBin_local = "";
+        $this->ipv4AddressBroadcast = Ipv4addressFactory::calculateNetworkOrBroadcastAddress($this, "1");
+        return $this;
+    }
 
-        for ($i = 0; $i < strlen($addBin_local); $i++):
-            if ($i < $netCidr_local):
-                $addBroBin_local .= $addBin_local[$i];
-            else:
-                $addBroBin_local .= "1";
-            endif;
-        endfor;
 
-        $this->ipv4AddressBroadcast = Ipv4address::binToDec($addBroBin_local);
-        unset($addBin_local, $netCidr_local, $addBroBin_local);
+    /**
+     * Set first IP of subnet
+     * @return self
+     */
+    private function setFirstAddressOfSubnet(): self
+    {
+        $this->ipv4FirstAddress = Ipv4addressFactory::setAddressOfSubnet($this, 1);
+        return $this;
     }
 
     /**
-     * Compute First usable address based on address and network mask
+     * Set second IP of subnet
+     * @return self
      */
-    private function setFirstAddressOfSubnet(): void
+    private function setSecondAddressOfSubnet(): self
     {
-        if ($this->ipv4Netmask->getCidr() < 31):
-            $addNet_local = $this->ipv4AddressNetwork->getInteger();
-            $firtIpInt = ++$addNet_local;
-            $this->ipv4FirstAddress = Ipv4address::binToDec(str_pad(decbin($firtIpInt), 32, "0", STR_PAD_LEFT));
-            unset($firtIpInt, $firtIpInt);
-        elseif ($this->ipv4Netmask->getCidr() == 31):
-            $this->ipv4FirstAddress = $this->ipv4AddressNetwork;
-        else:
-            // netmask is /32
-            $this->ipv4FirstAddress = $this->ipv4Address;
-        endif;
-    }
-
-    /**
-     * Compute First usable address based on address and network mask
-     */
-    private function setSecondAddressOfSubnet(): void
-    {
-        if ($this->ipv4Netmask->getCidr() < 30):
-            $addNet_local = $this->ipv4AddressNetwork->getInteger();
-            $firtIpInt = $addNet_local + 2;
-            $this->ipv4SecondAddress = Ipv4address::binToDec(str_pad(decbin($firtIpInt), 32, "0", STR_PAD_LEFT));
-            unset($firtIpInt, $firtIpInt);
-        elseif ($this->ipv4Netmask->getCidr() == 30):
-            $this->ipv4SecondAddress = $this->ipv4FirstAddress;
-        else:
-            // netmask is in range /31 - /32
-            $this->ipv4SecondAddress = $this->ipv4Address;
-        endif;
+        $this->ipv4SecondAddress = Ipv4addressFactory::setAddressOfSubnet($this, 2);
+        return $this;
     }
 
     /**
      * Compute Last usable address based on address and network mask
      */
-    private function setLastAddressOfSubnet(): void
+    private function setLastAddressOfSubnet(): self
     {
-        if ($this->ipv4Netmask->getCidr() < 31):
-            $addBro_local = $this->ipv4AddressBroadcast->getInteger();
-            $lastIpInt = --$addBro_local;
-            $this->ipv4LastAddress = Ipv4address::binToDec(str_pad(decbin($lastIpInt), 32, "0", STR_PAD_LEFT));
+        if ($this->ipv4Netmask->getCidr() < 31) {
+            $addressBroadcast_local = $this->ipv4AddressBroadcast->getInteger();
+            $lastIpInt = --$addressBroadcast_local;
+            $this->ipv4LastAddress = Ipv4addressFactory::binToDec(str_pad(
+                decbin($lastIpInt),
+                Ipv4netmask::IPV4_NETMASK_CIDR_VALUE_MAX,
+                "0", STR_PAD_LEFT));
             unset($lastIpInt);
-        elseif ($this->ipv4Netmask->getCidr() == 31):
+        } elseif ($this->ipv4Netmask->getCidr() == 31) {
+            // last IP is the same as broadcast IP
             $this->ipv4LastAddress = $this->ipv4AddressBroadcast;
-        else:
+        } else {
             // netmask is /32
             $this->ipv4LastAddress = $this->ipv4Address;
-        endif;
-    }
-
-    /**
-     * Based on current IPv4 subnet calculate smaller subnets and return they
-     * as array of Ipv4subnet objects.
-     * @return array Description array of Ipv4subnet objects.
-     */
-    public function getSmallerSubnet(int $smallerCidr): array
-    {
-        $smallerNetwork = new Ipv4netmask($smallerCidr);
-
-        if ($this->ipv4Netmask->getCidr() < $smallerCidr):
-
-            $biggerWildcard = $this->ipv4Netmask->getWildcardInt() + 1;
-            $smallerWildcard = $smallerNetwork->getWildcardInt() + 1;
-
-            $countOfLoop = $biggerWildcard / $smallerWildcard;
-
-            $returnArray = array();
-
-            // string [original address]/[smaller cidr] eg. 1.0.0.0/26
-            $firstSubnet = $this->ipv4AddressNetwork->getDecadic() . '/' . $smallerNetwork->getCidr();
-
-            $returnArray[] = new Ipv4subnet($firstSubnet);
-            unset($firstSubnet);
-
-            for ($i = 1; $i < $countOfLoop; $i++):
-                $networkAddress = $smallerWildcard * $i;
-                $newIpAddressObject = $this->ipv4AddressNetwork->add($networkAddress);
-                $subnet = $newIpAddressObject->getDecadic() . '/' . $smallerNetwork->getCidr();
-                $returnArray[] = new Ipv4subnet($subnet);
-                unset($subnet, $newIpAddressObject, $networkAddress);
-            endfor;
-            return $returnArray;
-        else:
-            throw new InvalidArgumentException("Network subnet is out of allowed range, I can't calculate smaller network range");
-        endif;
+        }
+        return $this;
     }
 
     /**
