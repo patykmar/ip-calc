@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Classes\IP;
+namespace App\Entity\IP;
 
 
 abstract class Ip
