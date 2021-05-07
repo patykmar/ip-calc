@@ -94,4 +94,11 @@ class Ipv4address extends Ip
         $this->addressArray = $ipAdd;
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getDecadic();
+    }
+
+
 }
