@@ -26,4 +26,5 @@ abstract class Ip
         return $this->addressArray;
     }
 
+    protected abstract function setAddressArray();
 }
