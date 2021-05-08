@@ -13,10 +13,10 @@ class Ipv6netmask extends Ipv6address
 {
 
     /** @var int network mask in CIDR notation */
-    private $cidr;
+    private int $cidr;
 
     /** @var string Wildcard mask */
-    private $wildcard;
+    private string $wildcard;
 
 
     public function __construct(int $cidr = 64)
