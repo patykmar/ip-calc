@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\IP\v4\Ipv4subnet;
+use App\Entity\IP\v6\Ipv6subnet;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+
 
 class IpcalcController extends AbstractController
 {
@@ -49,6 +50,10 @@ class IpcalcController extends AbstractController
      */
     public function versionSixCalc(string $ip = "abc::/64")
     {
+        $ipv6Subnet = new Ipv6subnet($ip);
+        dump($ip);
+        dd($ipv6Subnet);
+
 
         return $this->render('ipcalc/index.html.twig', [
             'subnet' => $ip,
