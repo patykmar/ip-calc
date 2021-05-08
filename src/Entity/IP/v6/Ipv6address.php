@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Entity\IP\v6;
 
-namespace App\IpamModule\Classes;
+use InvalidArgumentException;
 
 /**
  * Description of Ipv6address
@@ -60,7 +60,7 @@ class Ipv6address
       $ipv6Array = explode(':', $this->hexa);
 
       // is the IPv6 in shortened representation 
-      if (Strings::contains($this->hexa, "::")) {
+      if (str_contains($this->hexa, "::")) {
          // then add missing zeros 
 
          $ipv6ArrayAddMissingZeros = array();
