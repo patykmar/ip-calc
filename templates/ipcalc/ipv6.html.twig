@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% dump(subnet) %}
+
+{% block body %}
+
+    <h1>{% block title %}IPv6 address calculator{% endblock %} </h1>
+
+    <div class="row align-items-start">
+        <div class="col-6">
+
+            <table class="table" id="subnet-infor-table">
+                <tbody>
+                <tr>
+                    <th scope="row">Lookup address:</th>
+                    <td>{{ subnet.ipv6Address }}/{{ subnet.ipv6Netmask.getCidr() }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Network subnet:</th>
+                    <td>{{ subnet }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Netmask:</th>
+                    <td>{{ subnet.ipv6Netmask.getHexa() }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Network address:</th>
+                    <td>{{ subnet.ipv6NetworkAddress }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last address:</th>
+                    <td>{{ subnet.ipv6LastAddress }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
