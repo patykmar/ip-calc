@@ -10,7 +10,7 @@ abstract class Ip
     protected string $binary;
 
     /** @var array format of IP eg. [192,168,0,1] */
-    protected array $addressArray;
+    protected array $addressArray = array();
 
     /** @return string Binary format address eg. 11000000101010000000000100000001 */
     public function getBinary(): string
@@ -27,4 +27,6 @@ abstract class Ip
     }
 
     protected abstract function setAddressArray();
+
+    protected abstract function setBinary();
 }
