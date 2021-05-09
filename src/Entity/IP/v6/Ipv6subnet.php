@@ -2,6 +2,7 @@
 
 namespace App\Entity\IP\v6;
 
+use App\Factories\IPv6AddressFactory;
 use InvalidArgumentException;
 
 /**
@@ -18,13 +19,10 @@ class Ipv6subnet
     /** @var Ipv6address IPv6 network address object */
     public Ipv6address $ipv6NetworkAddress;
 
-    /** @var Ipv6address IPv6 first address in subnet */
-    public Ipv6address $ipv6FirstAddress;
-
     /** @var Ipv6address IPv6 last address in subnet */
     public Ipv6address $ipv6LastAddress;
 
-    /** @var Ipv6address IPv6 network object */
+    /** @var Ipv6netmask IPv6 network object */
     public Ipv6netmask $ipv6Netmask;
 
     /**
@@ -41,8 +39,8 @@ class Ipv6subnet
                 $this->ipv6Address = new Ipv6address($ipv6AddressAndMask[0]);
                 $this->ipv6Netmask = new Ipv6netmask($ipv6AddressAndMask[1]);
 
-                $this->computeNetworkAddress();
-                $this->computeLastAddress();
+                $this->setIpv6NetworkAddress()
+                    ->setIpv6LastAddress();
             } catch (InvalidArgumentException $exc) {
                 throw new InvalidArgumentException($exc->getMessage());
             }
@@ -52,49 +50,27 @@ class Ipv6subnet
     }
 
     /**
-     * Compute network address based on address and network mask
+     * @return self
      */
-    private function computeNetworkAddress(): void
+    private function setIpv6LastAddress(): self
     {
-        $addressBinary_local = $this->getIpv6Address()->getBin();
-        $netmaskCidr_local = $this->ipv6Netmask->getCidr();
-        $addressNetworkBin_local = "";
-
-
-        for ($i = 0; $i < strlen($addressBinary_local); $i++):
-            if ($i < $netmaskCidr_local):
-                $addressNetworkBin_local .= $addressBinary_local[$i];
-            else:
-                $addressNetworkBin_local .= "0";
-            endif;
-        endfor;
-
-
-        $this->setIpv6NetworkAddress(Ipv6address::binToDec($addressNetworkBin_local));
-        unset($addressBinary_local, $netmaskCidr_local, $addressNetworkBin_local);
+        $this->ipv6LastAddress = IPv6AddressFactory::computeLastAddress(
+            $this->getIpv6Address()->getBinary(),
+            $this->ipv6Netmask->getCidr()
+        );
+        return $this;
     }
 
     /**
-     * Compute last address of subnet
+     * @return self
      */
-    private function computeLastAddress(): void
+    private function setIpv6NetworkAddress(): self
     {
-        $addressBinary_local = $this->getIpv6Address()->getBin();
-        $netmaskCidr_local = $this->ipv6Netmask->getCidr();
-        $addressNetworkBin_local = "";
-
-
-        for ($i = 0; $i < strlen($addressBinary_local); $i++):
-            if ($i < $netmaskCidr_local):
-                $addressNetworkBin_local .= $addressBinary_local[$i];
-            else:
-                $addressNetworkBin_local .= "1";
-            endif;
-        endfor;
-
-
-        $this->setIpv6LastAddress(Ipv6address::binToDec($addressNetworkBin_local));
-        unset($addressBinary_local, $netmaskCidr_local, $addressNetworkBin_local);
+        $this->ipv6NetworkAddress = IPv6AddressFactory::computeNetworkAddress(
+            $this->ipv6Address->getBinary(),
+            $this->ipv6Netmask->getCidr()
+        );
+        return $this;
     }
 
     /**
@@ -106,27 +82,14 @@ class Ipv6subnet
     }
 
     /**
-     * @return Ipv6netmask Object with IPv6 netmask
+     * @return string
      */
-    public function getIpv6Netmask(): Ipv6netmask
+    public function __toString(): string
     {
-        return $this->ipv6Netmask;
+        return $this->ipv6NetworkAddress->getHexa().
+            "/".
+            $this->ipv6Netmask->getCidr();
     }
 
-    /**
-     * @param Ipv6address $ipv6NetworkAddress set object with IPv6 network address
-     */
-    private function setIpv6NetworkAddress(Ipv6address $ipv6NetworkAddress): void
-    {
-        $this->ipv6NetworkAddress = $ipv6NetworkAddress;
-    }
-
-    /**
-     * @param Ipv6address $ipv6LastAddress set object with IPv6 last address in this subnet
-     */
-    private function setIpv6LastAddress(Ipv6address $ipv6LastAddress): void
-    {
-        $this->ipv6LastAddress = $ipv6LastAddress;
-    }
 
 }
