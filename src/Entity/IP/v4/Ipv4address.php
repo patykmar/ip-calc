@@ -13,7 +13,7 @@ use InvalidArgumentException;
 class Ipv4address extends Ip
 {
     /** @var int how many numbers are in one IP address octet */
-    protected const OCTET_LEN = 8;
+    public const OCTET_LEN = 8;
 
     /** @var string Human readable address eg. 192.168.1.1 */
     private string $decadic;
@@ -56,7 +56,7 @@ class Ipv4address extends Ip
     /**
      * Set address in binary format
      */
-    protected function setBinary(): void
+    protected function setBinary(): self
     {
         $outputIP = "";
         foreach ($this->getAddressArray() as $item) {
@@ -64,6 +64,7 @@ class Ipv4address extends Ip
             $outputIP .= str_pad($IPbin, self::OCTET_LEN, "0", STR_PAD_LEFT);
         }
         $this->binary = $outputIP;
+        return $this;
     }
 
     /**
@@ -90,8 +91,7 @@ class Ipv4address extends Ip
      */
     protected function setAddressArray(): self
     {
-        $ipAdd = explode('.', $this->decadic);
-        $this->addressArray = $ipAdd;
+        $this->addressArray = explode('.', $this->decadic);
         return $this;
     }
 
