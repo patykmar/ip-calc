@@ -69,7 +69,7 @@ class Ipv4subnet
      */
     private function setNetworkAddress(): self
     {
-        $this->ipv4AddressNetwork = Ipv4addressFactory::calculateNetworkOrBroadcastAddress($this, "0");
+        $this->ipv4AddressNetwork = Ipv4addressFactory::calculateNetworkAddress($this);
         return $this;
     }
 
@@ -79,7 +79,7 @@ class Ipv4subnet
      */
     private function setBroadcastkAddress(): self
     {
-        $this->ipv4AddressBroadcast = Ipv4addressFactory::calculateNetworkOrBroadcastAddress($this, "1");
+        $this->ipv4AddressBroadcast = Ipv4addressFactory::calculateBroadcastAddress($this);
         return $this;
     }
 
