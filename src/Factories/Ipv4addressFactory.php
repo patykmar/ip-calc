@@ -86,12 +86,32 @@ class Ipv4addressFactory
     }
 
     /**
+     * Calculate network instance of Ipv4address
+     * @param Ipv4subnet $ipv4subnet
+     * @return Ipv4address
+     */
+    public static function calculateNetworkAddress(Ipv4subnet $ipv4subnet): Ipv4address
+    {
+        return Ipv4addressFactory::calculateNetworkOrBroadcastAddress($ipv4subnet,"0");
+    }
+
+    /**
+     * Based on parameter $bit can calculate network or broadcast instance of Ipv4address
+     * @param Ipv4subnet $ipv4subnet
+     * @return Ipv4address
+     */
+    public static function calculateBroadcastAddress(Ipv4subnet $ipv4subnet): Ipv4address
+    {
+        return Ipv4addressFactory::calculateNetworkOrBroadcastAddress($ipv4subnet);
+    }
+
+    /**
      * Based on parameter $bit can calculate network or broadcast instance of Ipv4address
      * @param Ipv4subnet $ipv4subnet
      * @param string $bit
      * @return Ipv4address
      */
-    public static function calculateNetworkOrBroadcastAddress(Ipv4subnet $ipv4subnet, string $bit = "1"): Ipv4address
+    private static function calculateNetworkOrBroadcastAddress(Ipv4subnet $ipv4subnet, string $bit = "1"): Ipv4address
     {
         // check $bit for only permit value
         if ($bit == "0" or $bit == "1") {
