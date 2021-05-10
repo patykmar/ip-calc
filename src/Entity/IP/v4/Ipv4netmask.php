@@ -4,6 +4,7 @@ namespace App\Entity\IP\v4;
 
 
 use App\Model\Ipv4NetworkModel;
+use App\Services\Ipv4netmaskService;
 use InvalidArgumentException;
 
 /**
@@ -22,7 +23,7 @@ class Ipv4netmask extends Ipv4address
     /** @var int network mask in CIDR notation */
     private int $cidr;
 
-    /** @var string Wildcard mask */
+    /** @var string Wildcard mask in binary format */
     private string $wildcard;
 
     /** @var int Wildcard mask integer */
@@ -50,16 +51,7 @@ class Ipv4netmask extends Ipv4address
      */
     private function setWildcard(): self
     {
-        $out_local = "";
-        $netMaskBin_local = $this->getBinary();
-        for ($i = 0; $i < strlen($netMaskBin_local); $i++) {
-            if ($netMaskBin_local[$i] == '0') {
-                $out_local .= '1';
-            } else {
-                $out_local .= '0';
-            }
-        }
-        $this->wildcard = $out_local;
+        $this->wildcard = Ipv4netmaskService::convertNetmaskToWildcard($this->getBinary());
         return $this;
     }
 
