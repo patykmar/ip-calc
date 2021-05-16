@@ -56,7 +56,8 @@ class IpcalcController extends AbstractController
             $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
-        return $this->json([
+
+        $jsonResponse = $this->json([
             'network-subnet' => $ipv4Subnet->ipv4AddressNetwork->getDecadic() . "/" . $ipv4Subnet->ipv4Netmask->getCidr(),
             'netmask' => $ipv4Subnet->ipv4Netmask->getDecadic(),
             'network-address' => $ipv4Subnet->ipv4AddressNetwork->getDecadic(),
@@ -67,6 +68,15 @@ class IpcalcController extends AbstractController
             'nsx-cidr' => $ipv4Subnet->ipv4FirstAddress->getDecadic() . '/' . $ipv4Subnet->ipv4Netmask->getCidr(),
             'nsx-static-ip-pool' => $ipv4Subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4Subnet->ipv4LastAddress->getDecadic(),
         ]);
+
+        dump($jsonResponse->headers);
+        $jsonResponse->headers->set('Content-Type', 'application/json');
+        $jsonResponse->headers->set('Access-Control-Allow-Origin', '*');
+        $jsonResponse->headers->set('crossorigin', 'anonymous');
+        dump($jsonResponse->headers);
+
+
+        return $jsonResponse;
     }
 
     /**
