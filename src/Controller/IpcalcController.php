@@ -15,6 +15,8 @@ class IpcalcController extends AbstractController
 {
     private LoggerInterface $logger;
 
+    private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
+
     /**
      * IpcalcController constructor.
      */
@@ -58,23 +60,46 @@ class IpcalcController extends AbstractController
         }
 
         $jsonResponse = $this->json([
-            'network-subnet' => $ipv4Subnet->ipv4AddressNetwork->getDecadic() . "/" . $ipv4Subnet->ipv4Netmask->getCidr(),
-            'netmask' => $ipv4Subnet->ipv4Netmask->getDecadic(),
-            'network-address' => $ipv4Subnet->ipv4AddressNetwork->getDecadic(),
-            'first-address' => $ipv4Subnet->ipv4FirstAddress->getDecadic(),
-            'last-address' => $ipv4Subnet->ipv4LastAddress->getDecadic(),
-            'broadcast-address' => $ipv4Subnet->ipv4AddressBroadcast->getDecadic(),
-            'number-of-usable-address' => $ipv4Subnet->ipv4LastAddress->getInteger() - $ipv4Subnet->ipv4FirstAddress->getInteger() + 1,
-            'nsx-cidr' => $ipv4Subnet->ipv4FirstAddress->getDecadic() . '/' . $ipv4Subnet->ipv4Netmask->getCidr(),
-            'nsx-static-ip-pool' => $ipv4Subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4Subnet->ipv4LastAddress->getDecadic(),
+            'network-subnet' => [
+                'key' => 'Network subnet:',
+                'value' => $ipv4Subnet->ipv4AddressNetwork->getDecadic() . "/" . $ipv4Subnet->ipv4Netmask->getCidr()
+            ],
+            'netmask' => [
+                'key' => 'Netmask:',
+                'value' => $ipv4Subnet->ipv4Netmask->getDecadic()
+            ],
+            'network-address' => [
+                'key' => 'Network address:',
+                'value' => $ipv4Subnet->ipv4AddressNetwork->getDecadic()
+            ],
+            'first-address' => [
+                'key' => 'First address:',
+                'value' => $ipv4Subnet->ipv4FirstAddress->getDecadic()
+            ],
+            'last-address' => [
+                'key' => 'Last address:',
+                'value' => $ipv4Subnet->ipv4LastAddress->getDecadic()
+            ],
+            'broadcast-address' => [
+                'key' => 'Broadcast address:',
+                'value' => $ipv4Subnet->ipv4AddressBroadcast->getDecadic()
+            ],
+            'number-of-usable-address' => [
+                'key' => 'Number of usable address:',
+                'value' => $ipv4Subnet->ipv4LastAddress->getInteger() - $ipv4Subnet->ipv4FirstAddress->getInteger() + 1
+            ],
+            'nsx-cidr' => [
+                'key' => 'NSX CIDR:',
+                'value' => $ipv4Subnet->ipv4FirstAddress->getDecadic() . '/' . $ipv4Subnet->ipv4Netmask->getCidr()
+            ],
+            'nsx-static-ip-pool' => [
+                'key' => 'NSX Static IP pool:',
+                'value' => $ipv4Subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4Subnet->ipv4LastAddress->getDecadic()
+            ],
         ]);
 
-        dump($jsonResponse->headers);
-        $jsonResponse->headers->set('Content-Type', 'application/json');
-        $jsonResponse->headers->set('Access-Control-Allow-Origin', '*');
-        $jsonResponse->headers->set('crossorigin', 'anonymous');
-        dump($jsonResponse->headers);
-
+        // allow access from all origin
+        $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
 
         return $jsonResponse;
     }
@@ -112,12 +137,17 @@ class IpcalcController extends AbstractController
             $ipv6Subnet = new Ipv6subnet("abc::/64");
         }
 
-        return $this->json([
+        $jsonResponse = $this->json([
             'lookup-address' => $ipv6Subnet->ipv6Address->getHexa() . "/" . $ipv6Subnet->ipv6Netmask->getCidr(),
             'network-subnet' => $ipv6Subnet->ipv6NetworkAddress->getHexa() . '/' . $ipv6Subnet->ipv6Netmask->getCidr(),
             'netmask' => $ipv6Subnet->ipv6Netmask->getHexa(),
             'network-address' => $ipv6Subnet->ipv6NetworkAddress->getHexa(),
             'last-address' => $ipv6Subnet->ipv6LastAddress->getHexa(),
         ]);
+
+        // allow access from all origin
+        $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
+
+        return $jsonResponse;
     }
 }
