@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\IP\v4\Ipv4subnet;
 use App\Services\Ipv4subnetService;
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,20 +12,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Ipv4calcController extends AbstractController
 {
-    private LoggerInterface $logger;
 
+    /**
+     * @var Ipv4subnetService
+     */
     private Ipv4subnetService $ipv4subnetService;
 
     private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
 
     /**
      * IpcalcController constructor.
-     * @param LoggerInterface $logger
      * @param Ipv4subnetService $ipv4subnetService
      */
-    public function __construct(LoggerInterface $logger, Ipv4subnetService $ipv4subnetService)
+    public function __construct(Ipv4subnetService $ipv4subnetService)
     {
-        $this->logger = $logger;
         $this->ipv4subnetService = $ipv4subnetService;
     }
 
@@ -41,7 +40,6 @@ class Ipv4calcController extends AbstractController
         try {
             $ipv4Subnet = new Ipv4subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
@@ -60,7 +58,6 @@ class Ipv4calcController extends AbstractController
         try {
             $ipv4Subnet = new Ipv4subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 

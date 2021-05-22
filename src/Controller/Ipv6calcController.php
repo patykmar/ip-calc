@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\IP\v6\Ipv6subnet;
 use App\Services\Ipv6subnetService;
 use InvalidArgumentException;
-use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,20 +20,12 @@ class Ipv6calcController extends AbstractController
     private Ipv6subnetService $ipv6subnetService;
 
     /**
-     * @var Logger
-     */
-    private Logger $logger;
-
-
-    /**
      * Ipv6calcController constructor.
      * @param Ipv6subnetService $ipv6subnetService
-     * @param Logger $logger
      */
-    public function __construct(Ipv6subnetService $ipv6subnetService, Logger $logger)
+    public function __construct(Ipv6subnetService $ipv6subnetService)
     {
         $this->ipv6subnetService = $ipv6subnetService;
-        $this->logger = $logger;
     }
 
     /**
@@ -47,7 +38,6 @@ class Ipv6calcController extends AbstractController
         try {
             $ipv6Subnet = new Ipv6subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv6Subnet = new Ipv6subnet("abc::/64");
         }
 
@@ -66,7 +56,6 @@ class Ipv6calcController extends AbstractController
         try {
             $ipv6Subnet = new Ipv6subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv6Subnet = new Ipv6subnet("abc::/64");
         }
 
