@@ -55,7 +55,7 @@ class Ipv4calcController extends AbstractController
      * @param string $ip
      * @return Response
      */
-    public function apiVersionFourCalc(string $ip = "172.20.30.0/24"): Response
+    public function apiVersionFourCalc(string $ip = "172.10.20.0/24"): Response
     {
         try {
             $ipv4Subnet = new Ipv4subnet($ip);
@@ -63,8 +63,6 @@ class Ipv4calcController extends AbstractController
             $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
-
-        dump($this->ipv4subnetService->prepareJsonResponse($ipv4Subnet));
 
         $jsonResponse = $this->json(
             $this->ipv4subnetService->prepareJsonResponse($ipv4Subnet)
