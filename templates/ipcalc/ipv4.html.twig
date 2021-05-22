@@ -51,4 +51,23 @@
             </table>
         </div>
     </div>
+
+    {% if(smallerSubnets) %}
+        <h2>Subnet calculator</h2>
+        {% for smallerSubnet in smallerSubnets %}
+            <div>
+                <div style="float: left">
+                    <ol>
+                        {% for subnet in smallerSubnet %}
+                            <li>
+                                {# <a n:href="Ipv4:Info $ip=$item->__toString()">{$item->__toString()}</a> #}
+                                <a href="{{ path("ipv4calc",{ip: subnet.__toString()}) }}">{{ subnet.__toString() }}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}
