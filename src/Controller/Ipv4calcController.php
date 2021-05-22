@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class IpcalcController extends AbstractController
+class Ipv4calcController extends AbstractController
 {
     private LoggerInterface $logger;
 
