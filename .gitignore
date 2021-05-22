@@ -16,8 +16,6 @@
 ###< symfony/phpunit-bridge ###
 
 ### IDEs local files
-.idea
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
+/.idea/
+
 ###< phpunit/phpunit ###
