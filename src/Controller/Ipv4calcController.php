@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Ipv4calcController extends AbstractController
 {
+    /** @var int how many smaller subnets will be calculate */
+    private const DEEP_INDEX = 4;
 
     /**
      * @var Ipv4subnetService
@@ -43,8 +45,21 @@ class Ipv4calcController extends AbstractController
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
+        $subnetCird = $ipv4Subnet->ipv4Netmask->getCidr();
+        // calculate smaller subnets, in range /1 - /29 next 4 smaller subnet only
+        $subnetsArray = array();
+        $iterationCount = 0;
+        for ($i = ($subnetCird + 1); $i < 31; $i++) {
+            $subnetsArray[] = $this->ipv4subnetService->getSmallerSubnet($i, $ipv4Subnet);
+            $iterationCount++;
+            if ($iterationCount > self::DEEP_INDEX){
+                break;
+            }
+        }
+
         return $this->render('ipcalc/ipv4.html.twig', [
             'subnet' => $ipv4Subnet,
+            'smallerSubnets' => $subnetsArray,
         ]);
     }
 

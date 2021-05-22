@@ -60,15 +60,17 @@ class Ipv4subnetService
     /**
      * Based on current IPv4 subnet calculate smaller subnets and return they
      * as array of Ipv4subnet objects.
+     * @param int $smallerCidr
+     * @param Ipv4subnet $ipv4subnet
      * @return array Description array of Ipv4subnet objects.
      */
-    public function getSmallerSubnet(int $smallerCidr): array
+    public function getSmallerSubnet(int $smallerCidr, Ipv4subnet $ipv4subnet): array
     {
         $smallerNetwork = new Ipv4netmask($smallerCidr);
 
-        if ($this->ipv4subnet->ipv4Netmask->getCidr() < $smallerCidr) {
+        if ($ipv4subnet->ipv4Netmask->getCidr() < $smallerCidr) {
 
-            $biggerWildcard = $this->ipv4subnet->ipv4Netmask->getWildcardInt() + 1;
+            $biggerWildcard = $ipv4subnet->ipv4Netmask->getWildcardInt() + 1;
             $smallerWildcard = $smallerNetwork->getWildcardInt() + 1;
 
             $countOfLoop = $biggerWildcard / $smallerWildcard;
@@ -76,14 +78,14 @@ class Ipv4subnetService
             $returnArray = array();
 
             // string [original address]/[smaller cidr] eg. 1.0.0.0/26
-            $firstSubnet = $this->ipv4subnet->ipv4AddressNetwork->getDecadic() . '/' . $smallerNetwork->getCidr();
+            $firstSubnet = $ipv4subnet->ipv4AddressNetwork->getDecadic() . '/' . $smallerNetwork->getCidr();
 
             $returnArray[] = new Ipv4subnet($firstSubnet);
             unset($firstSubnet);
 
             for ($i = 1; $i < $countOfLoop; $i++) {
                 $networkAddress = $smallerWildcard * $i;
-                $newIpAddressObject = Ipv4addressFactory::add($this->ipv4subnet->ipv4AddressNetwork, $networkAddress);
+                $newIpAddressObject = Ipv4addressFactory::add($ipv4subnet->ipv4AddressNetwork, $networkAddress);
                 $subnet = $newIpAddressObject->getDecadic() . '/' . $smallerNetwork->getCidr();
                 $returnArray[] = new Ipv4subnet($subnet);
                 unset($subnet, $newIpAddressObject, $networkAddress);
