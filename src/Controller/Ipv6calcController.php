@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\IP\v6\Ipv6subnet;
+use App\Services\Ipv6subnetService;
 use InvalidArgumentException;
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,11 +16,33 @@ class Ipv6calcController extends AbstractController
     private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
 
     /**
+     * @var Ipv6subnetService
+     */
+    private Ipv6subnetService $ipv6subnetService;
+
+    /**
+     * @var Logger
+     */
+    private Logger $logger;
+
+
+    /**
+     * Ipv6calcController constructor.
+     * @param Ipv6subnetService $ipv6subnetService
+     * @param Logger $logger
+     */
+    public function __construct(Ipv6subnetService $ipv6subnetService, Logger $logger)
+    {
+        $this->ipv6subnetService = $ipv6subnetService;
+        $this->logger = $logger;
+    }
+
+    /**
      * @Route("/ipv6calc/{ip}", name="ipv6calc", requirements={"ip"=".+"}, defaults={"abc::/64"})
      * @param string $ip
      * @return Response
      */
-    public function versionSixCalc(string $ip = "abc::/64")
+    public function versionSixCalc(string $ip = "abc::/64"): Response
     {
         try {
             $ipv6Subnet = new Ipv6subnet($ip);
@@ -46,31 +70,15 @@ class Ipv6calcController extends AbstractController
             $ipv6Subnet = new Ipv6subnet("abc::/64");
         }
 
-        $jsonResponse = $this->json([
-            'lookup-address' => [
-                'key' => 'Lookup address:',
-                'value' => $ipv6Subnet->ipv6Address->getHexa() . "/" . $ipv6Subnet->ipv6Netmask->getCidr()
-            ],
-            'network-subnet' => [
-                'key' => 'Network subnet:',
-                'value' => $ipv6Subnet->ipv6NetworkAddress->getHexa() . '/' . $ipv6Subnet->ipv6Netmask->getCidr()
-            ],
-            'netmask' => [
-                'key' => 'Netmask:',
-                'value' => $ipv6Subnet->ipv6Netmask->getHexa()
-            ],
-            'network-address' => [
-                'key' => 'Network address:',
-                'value' => $ipv6Subnet->ipv6NetworkAddress->getHexa()
-            ],
-            'last-address' => [
-                'key' => 'Last address:',
-                'value' => $ipv6Subnet->ipv6LastAddress->getHexa()
-            ],
-        ]);
+        $jsonResponse = $this->json(
+            $this->ipv6subnetService->prepareJsonResponse($ipv6Subnet)
+        );
 
         // allow access from all origin
-        $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
+        $jsonResponse->headers->set(
+            'Access-Control-Allow-Origin',
+            self::ACCESS_CONTROL_ALLOW_ORIGIN
+        );
 
         return $jsonResponse;
     }
