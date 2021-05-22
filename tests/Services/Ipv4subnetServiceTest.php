@@ -16,6 +16,13 @@ class Ipv4subnetServiceTest extends TestCase
 
         $response = $ipv4subnetService->prepareJsonResponse($ipv4subnet);
 
-        $this->assertEquals(9, count($response));
+        $this->assertCount(9, $response);
+        $this->assertEquals('Network subnet:', $response['network-subnet']['key']);
+        $this->assertEquals('172.20.24.0/21', $response['network-subnet']['value']);
+        $this->assertEquals('Netmask:', $response['netmask']['key']);
+        $this->assertEquals('255.255.248.0', $response['netmask']['value']);
+        $this->assertEquals('172.20.31.254', $response['last-address']['value']);
+        $this->assertEquals(2046, $response['number-of-usable-address']['value']);
+        $this->assertEquals("172.20.24.1/21", $response['nsx-cidr']['value']);
     }
 }
