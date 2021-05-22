@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Entity\IP\v4\Ipv4netmask;
 use App\Entity\IP\v4\Ipv4subnet;
@@ -13,6 +11,8 @@ class Ipv4subnetService
 {
     /**
      * Based on IPv4 Subnet return array for JSON format
+     * @param Ipv4subnet $ipv4subnet
+     * @return array
      */
     public function prepareJsonResponse(Ipv4subnet $ipv4subnet): array
     {
