@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\IP\v4\Ipv4subnet;
+use App\Services\Ipv4subnetService;
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,16 +12,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Ipv4calcController extends AbstractController
 {
-    private LoggerInterface $logger;
+
+    /**
+     * @var Ipv4subnetService
+     */
+    private Ipv4subnetService $ipv4subnetService;
 
     private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
 
     /**
      * IpcalcController constructor.
+     * @param Ipv4subnetService $ipv4subnetService
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(Ipv4subnetService $ipv4subnetService)
     {
-        $this->logger = $logger;
+        $this->ipv4subnetService = $ipv4subnetService;
     }
 
 
@@ -35,7 +40,6 @@ class Ipv4calcController extends AbstractController
         try {
             $ipv4Subnet = new Ipv4subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
@@ -49,53 +53,17 @@ class Ipv4calcController extends AbstractController
      * @param string $ip
      * @return Response
      */
-    public function apiVersionFourCalc(string $ip = "192.168.1.0/24"): Response
+    public function apiVersionFourCalc(string $ip = "172.10.20.0/24"): Response
     {
         try {
             $ipv4Subnet = new Ipv4subnet($ip);
         } catch (InvalidArgumentException $exception) {
-            $this->logger->error($exception->getMessage());
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
-        $jsonResponse = $this->json([
-            'network-subnet' => [
-                'key' => 'Network subnet:',
-                'value' => $ipv4Subnet->ipv4AddressNetwork->getDecadic() . "/" . $ipv4Subnet->ipv4Netmask->getCidr()
-            ],
-            'netmask' => [
-                'key' => 'Netmask:',
-                'value' => $ipv4Subnet->ipv4Netmask->getDecadic()
-            ],
-            'network-address' => [
-                'key' => 'Network address:',
-                'value' => $ipv4Subnet->ipv4AddressNetwork->getDecadic()
-            ],
-            'first-address' => [
-                'key' => 'First address:',
-                'value' => $ipv4Subnet->ipv4FirstAddress->getDecadic()
-            ],
-            'last-address' => [
-                'key' => 'Last address:',
-                'value' => $ipv4Subnet->ipv4LastAddress->getDecadic()
-            ],
-            'broadcast-address' => [
-                'key' => 'Broadcast address:',
-                'value' => $ipv4Subnet->ipv4AddressBroadcast->getDecadic()
-            ],
-            'number-of-usable-address' => [
-                'key' => 'Number of usable address:',
-                'value' => $ipv4Subnet->ipv4LastAddress->getInteger() - $ipv4Subnet->ipv4FirstAddress->getInteger() + 1
-            ],
-            'nsx-cidr' => [
-                'key' => 'NSX CIDR:',
-                'value' => $ipv4Subnet->ipv4FirstAddress->getDecadic() . '/' . $ipv4Subnet->ipv4Netmask->getCidr()
-            ],
-            'nsx-static-ip-pool' => [
-                'key' => 'NSX Static IP pool:',
-                'value' => $ipv4Subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4Subnet->ipv4LastAddress->getDecadic()
-            ],
-        ]);
+        $jsonResponse = $this->json(
+            $this->ipv4subnetService->prepareJsonResponse($ipv4Subnet)
+        );
 
         // allow access from all origin
         $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
