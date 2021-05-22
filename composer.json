@@ -96,6 +96,6 @@
             "require": "5.2.*"
         }
     },
-    "name": "",
-    "description": ""
+    "name": "patykmar/ipcalc",
+    "description": "IPv4 and IPv6 calculator"
 }
