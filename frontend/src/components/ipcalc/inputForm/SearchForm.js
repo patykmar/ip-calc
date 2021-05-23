@@ -2,13 +2,12 @@ import React from "react";
 import Button from "./Button";
 
 export default class SearchForm extends React.Component {
+
     constructor(props) {
         super(props);
-        this.placeholderForm = props.placeholderForm;
-        this.labelForm = props.labelForm;
         this.state = {
-            subnet: props.placeholderForm,
-        };
+            subnet: '',
+        }
     }
 
     /**
@@ -39,13 +38,13 @@ export default class SearchForm extends React.Component {
                         <input
                             type="text"
                             className="form-control"
-                            value={this.state.value}
+                            value={this.state.subnet}
                             name="subnet"
                             onChange={this.subnetChangeHandler}
                             id="floatingInput"
-                            placeholder={this.placeholderForm}
+                            placeholder={this.props.placeholderForm}
                         />
-                        <label htmlFor="floatingInput">{this.labelForm}</label>
+                        <label htmlFor="floatingInput">{this.props.labelForm}</label>
                     </div>
                     <Button type={"submit"}>Calculate</Button>
                     <hr className="my-4"/>
