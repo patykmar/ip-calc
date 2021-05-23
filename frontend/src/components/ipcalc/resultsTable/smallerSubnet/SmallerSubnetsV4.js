@@ -14,10 +14,10 @@ class SmallerSubnetsV4 extends React.Component {
         return (
             <div>
                 {Object.values(this.props.smallerSubnetsData).map((smallerSubnet, index) => (
-                    <div className={styles.smallerSubnetCard} key={index}>
-                        <ol>
+                    <div className={styles.smallerSubnetCard} key={Math.pow(index,2).toString()}>
+                        <ol key={Math.pow(index,3).toString()}>
                             {Object.values(smallerSubnet).map((subnet, indexx) => (
-                                <li><Button onClick={this.smallSubnetButtonClickHandler} key={index + '-' + indexx} variant="link"
+                                <li key={indexx}><Button onClick={this.smallSubnetButtonClickHandler} key={subnet.subnet} variant="link"
                                             value={subnet.subnet}>{subnet.subnet}</Button></li>
                             ))}
                         </ol>
