@@ -7,6 +7,8 @@
 /public/bundles/
 /var/
 /vendor/
+symfony.lock
+
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
@@ -18,4 +20,5 @@
 ### IDEs local files
 /.idea/
 
-###< phpunit/phpunit ###
+### composer ###
+composer.lock
