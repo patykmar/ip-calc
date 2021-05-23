@@ -9,13 +9,24 @@ use InvalidArgumentException;
 
 class Ipv4subnetService
 {
+    public const IPV4_LAST_CIDR_NETWORK = 31;
+
     /**
      * Based on IPv4 Subnet return array for JSON format
      * @param Ipv4subnet $ipv4subnet
      * @return array
      */
-    public function prepareJsonResponse(Ipv4subnet $ipv4subnet): array
+    public function prepareJsonResponse(Ipv4subnet $ipv4subnet, array $smallerSubnets): array
     {
+        // remap smaller subnet to real value instead of return objects
+        $smallerSubnets_localArray = array();
+        foreach($smallerSubnets as $smallerSubnet){
+            foreach ($smallerSubnet as $subnet){
+                $smallerSubnets_localArray[$subnet->ipv4Netmask->getCidr()][] = $subnet->__toString();
+            }
+        }
+
+
         return [
             'network-subnet' => [
                 'key' => 'Network subnet:',
@@ -53,6 +64,10 @@ class Ipv4subnetService
                 'key' => 'NSX Static IP pool:',
                 'value' => $ipv4subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4subnet->ipv4LastAddress->getDecadic()
             ],
+            'smaller-subnets' => [
+                'key' => 'Smaller subnets',
+                'value' => $smallerSubnets_localArray
+            ],
         ];
     }
 
@@ -64,7 +79,7 @@ class Ipv4subnetService
      * @param Ipv4subnet $ipv4subnet
      * @return array Description array of Ipv4subnet objects.
      */
-    public function getSmallerSubnet(int $smallerCidr, Ipv4subnet $ipv4subnet): array
+    public function calculateSmallerSubnets(int $smallerCidr, Ipv4subnet $ipv4subnet): array
     {
         $smallerNetwork = new Ipv4netmask($smallerCidr);
 
@@ -95,5 +110,28 @@ class Ipv4subnetService
             throw new InvalidArgumentException("Network subnet is out of allowed range, I can't calculate smaller network range");
         }
     }
+
+    /**
+     * Generate smaller subnets as array of Ipv4subnet objects by default for next 5 CIDR value
+     * @param Ipv4subnet $ipv4subnet
+     * @param int $cidrStartingPoint
+     * @param int $deepIndex
+     * @return array
+     */
+    public function getSmallerSubnet(Ipv4subnet $ipv4subnet, int $cidrStartingPoint, int $deepIndex = 4): array
+    {
+        // calculate smaller subnets, in range /1 - /29 next 4 smaller subnet only
+        $subnetsArray = array();
+        $iterationCount = 0;
+        for ($i = ($cidrStartingPoint + 1); $i < self::IPV4_LAST_CIDR_NETWORK; $i++) {
+            $subnetsArray[] = $this->calculateSmallerSubnets($i, $ipv4subnet);
+            $iterationCount++;
+            if ($iterationCount > $deepIndex) {
+                break;
+            }
+        }
+        return $subnetsArray;
+    }
+
 
 }
