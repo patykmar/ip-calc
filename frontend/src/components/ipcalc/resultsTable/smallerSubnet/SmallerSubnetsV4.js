@@ -1,8 +1,12 @@
 import React from "react";
-import {Link} from 'react-router-dom'
 import styles from './SmallerSubnetsV4.module.css';
+import {Button} from "react-bootstrap";
 
 class SmallerSubnetsV4 extends React.Component {
+
+    smallSubnetButtonClickHandler = (event) =>{
+        this.props.onClickHandlerButton(event.target.value);
+    }
 
     render = () => {
         console.log('SmallerSubnetsV4 - render');
@@ -13,8 +17,8 @@ class SmallerSubnetsV4 extends React.Component {
                     <div className={styles.smallerSubnetCard} key={index}>
                         <ol>
                             {Object.values(smallerSubnet).map((subnet, indexx) => (
-                                <li key={index + '-' + indexx}><Link
-                                    to={`/ipv4/${subnet.subnet}`}>{subnet.subnet}</Link></li>
+                                <li><Button onClick={this.smallSubnetButtonClickHandler} key={index + '-' + indexx} variant="link"
+                                            value={subnet.subnet}>{subnet.subnet}</Button></li>
                             ))}
                         </ol>
                     </div>
