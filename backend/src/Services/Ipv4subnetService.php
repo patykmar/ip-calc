@@ -18,16 +18,30 @@ class Ipv4subnetService
      */
     public function prepareJsonResponse(Ipv4subnet $ipv4subnet, array $smallerSubnets): array
     {
+
         // remap smaller subnet to real value instead of return objects
         $smallerSubnets_localArray = array();
-        foreach($smallerSubnets as $smallerSubnet){
-            foreach ($smallerSubnet as $subnet){
-                $smallerSubnets_localArray[$subnet->ipv4Netmask->getCidr()][] = $subnet->__toString();
+//        foreach($smallerSubnets as $smallerSubnet){
+//            foreach ($smallerSubnet as $subnet){
+//                $smallerSubnets_localArray[$subnet->ipv4Netmask->getCidr()][] = $subnet->__toString();
+//            }
+//        }
+        foreach ($smallerSubnets as $key => $smallerSubnet) {
+            foreach ($smallerSubnet as $keyy => $subnet) {
+                $smallerSubnets_localArray[$subnet->ipv4Netmask->getCidr().'-subnet'][$key.$keyy.'-value'] = [
+                    'cidr' => $subnet->ipv4Netmask->getCidr(),
+                    'subnet' => $subnet->__toString()
+                ];
+//                echo "key & keyy: " . $key . " - " . $keyy . '-subnet <br>';
+//                echo "CIDR: " . $subnet->ipv4Netmask->getCidr() . "<br>";
+//                echo "subnet: " . $subnet->__toString() . "<br><br>";
             }
         }
 
+        dump($smallerSubnets_localArray);
 
-        return [
+
+        $returnArray = [
             'network-subnet' => [
                 'key' => 'Network subnet:',
                 'value' => $ipv4subnet->ipv4AddressNetwork->getDecadic() . "/" . $ipv4subnet->ipv4Netmask->getCidr()
@@ -64,11 +78,13 @@ class Ipv4subnetService
                 'key' => 'NSX Static IP pool:',
                 'value' => $ipv4subnet->ipv4SecondAddress->getDecadic() . '-' . $ipv4subnet->ipv4LastAddress->getDecadic()
             ],
-            'smaller-subnets' => [
-                'key' => 'Smaller subnets',
-                'value' => $smallerSubnets_localArray
-            ],
+//            'smaller-subnets' => [
+//                'key' => 'Smaller subnets',
+//                'value' => $smallerSubnets_localArray
+//            ],
         ];
+//        dd($returnArray);
+        return $returnArray;
     }
 
 
