@@ -81,8 +81,8 @@ class Ipv4calcController extends AbstractController
     }
 
     /**
-     * @Route("api/ipv4/smaller-subnets/{ip}", name="apiIpv4calc", requirements={"ip"=".+"}, defaults={"10.20.30.0/24"})
-     * @param string $ip
+     * @Route("api/ipv4/smaller-subnets/{enteredSubnet}", name="apiIpv4SmallerSubnet", requirements={"enteredSubnet"=".+"}, defaults={"10.20.30.0/24"})
+     * @param string $enteredSubnet
      * @return Response
      */
     public function apiSmallerSubnet(string $enteredSubnet = "10.20.30.0/24"): Response
