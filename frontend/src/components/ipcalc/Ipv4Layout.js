@@ -108,13 +108,8 @@ class Ipv4Layout extends React.Component {
     }
 
     componentDidMount() {
-        const {urlEnteredSubnet} = this.props.match.params;
-
-        console.log('Ipv4Layout - componentDidMount');
-        console.log(urlEnteredSubnet);
-
         this.setState({
-            enteredSubnet: urlEnteredSubnet ? urlEnteredSubnet : "192.168.1.0/24",
+            enteredSubnet: "192.168.170.0/24",
             outputTableData: OUTPUT_TABLE_DATA_V4,
             smallerSubnet: SMALLER_SUBNETS_V4
         });
@@ -197,6 +192,7 @@ class Ipv4Layout extends React.Component {
                         <SearchForm
                             placeholderForm="10.0.0.0/24"
                             labelForm="IPv4 subnet"
+                            formValue={this.state.enteredSubnet}
                             onSubmittedSubnetForm={this.submittedSubnetFormHandler}
                         />
                     </div>
