@@ -1,7 +1,7 @@
-import LayoutOtput from "../layout/LayoutOutput";
-import SearchForm from "../form/SearchForm";
+import SearchForm from "./inputForm/SearchForm";
 import React from "react";
 import axios from "axios";
+import SubnetTableV6 from "./resultsTable/SubnetTableV6";
 
 
 const OUTPUT_TABLE_DATA_V6 = {
@@ -53,7 +53,7 @@ class Ipv6Layout extends React.Component {
 
 
     /**
-     * Here I have output from web-form
+     * Here I have output from web-inputForm
      * @param {*} enteredSubnet
      */
     submittedSubnetFormHandler = (enteredSubnet) => {
@@ -70,7 +70,7 @@ class Ipv6Layout extends React.Component {
                 <div className="container col-xl-10 col-xxl-8 px-4 py-5">
                     <div className="row align-items-center g-lg-5 py-5">
                         <h1 className="display-4 fw-bold lh-1 mb-3">IPv6 address calculator</h1>
-                        <LayoutOtput
+                        <SubnetTableV6
                             htmlH1="IPv6 address calculator"
                             outputTableData={this.state.outputTableData}
                         />
