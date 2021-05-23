@@ -12,7 +12,7 @@ export default class SearchForm extends React.Component {
     }
 
     /**
-     * Calling this function after submit form
+     * Calling this function after submit inputForm
      * @param {*} event
      */
     submitFormHandle = (event) => {

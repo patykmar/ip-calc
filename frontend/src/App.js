@@ -1,7 +1,7 @@
 import React from "react";
 
-// import Ipv4Layout from "./components/main/Ipv4Layout";
-import Ipv6Layout from "./components/main/Ipv6Layout";
+// import Ipv4Layout from "./components/ipcalc/Ipv4Layout";
+import Ipv6Layout from "./components/ipcalc/Ipv6Layout";
 
 
 

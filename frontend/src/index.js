@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {Route, BrowserRouter as Router, NavLink} from 'react-router-dom'
 import reportWebVitals from './reportWebVitals';
-import Ipv4Layout from "./components/main/Ipv4Layout";
-import Ipv6Layout from "./components/main/Ipv6Layout";
+import Ipv4Layout from "./components/ipcalc/Ipv4Layout";
+import Ipv6Layout from "./components/ipcalc/Ipv6Layout";
 
 const routing = (
     <Router>

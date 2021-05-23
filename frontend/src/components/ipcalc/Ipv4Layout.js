@@ -1,7 +1,7 @@
-import LayoutOtput from "../layout/LayoutOutput";
-import SearchForm from "../form/SearchForm";
 import React from "react";
 import axios from "axios";
+import SubnetTableV4 from "./resultsTable/SubnetTableV4";
+import SearchForm from "./inputForm/SearchForm";
 
 
 const OUTPUT_TABLE_DATA_V4 = {
@@ -60,7 +60,7 @@ class Ipv4Layout extends React.Component {
 
 
     /**
-     * Here I have output from web-form
+     * Here I have output from web-inputForm
      * @param {*} enteredSubnet
      */
     submittedSubnetFormHandler = (enteredSubnet) => {
@@ -79,7 +79,7 @@ class Ipv4Layout extends React.Component {
                 <div className="container col-xl-10 col-xxl-8 px-4 py-5">
                     <div className="row align-items-center g-lg-5 py-5">
                         <h1 className="display-4 fw-bold lh-1 mb-3">IPv4 address calculator</h1>
-                        <LayoutOtput
+                        <SubnetTableV4
                             outputTableData={this.state.outputTableData}
                         />
                         <SearchForm
