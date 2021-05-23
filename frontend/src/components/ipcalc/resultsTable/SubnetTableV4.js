@@ -1,7 +1,7 @@
 import React from "react";
 import SubnetTableRow from "./SubnetTableRow";
 
-export default class SubnetTableV4 extends React.Component {
+class SubnetTableV4 extends React.Component {
 
     render = () => {
         console.log("SubnetTableV4 - render");
@@ -21,3 +21,5 @@ export default class SubnetTableV4 extends React.Component {
         );
     };
 }
+
+export default SubnetTableV4;

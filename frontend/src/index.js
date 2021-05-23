@@ -16,7 +16,7 @@ const routing = (
         </header>
         <div>
             <Route exact path="/" component={Ipv4Layout} />
-            <Route path="/ipv4" component={Ipv4Layout} />
+            <Route path="/ipv4/:urlEnteredSubnet+" component={Ipv4Layout} />
             <Route path="/ipv6" component={Ipv6Layout} />
         </div>
     </Router>

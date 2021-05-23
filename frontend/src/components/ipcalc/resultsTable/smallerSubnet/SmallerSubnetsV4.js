@@ -1,0 +1,31 @@
+import React from "react";
+import styles from './SmallerSubnetsV4.module.css';
+import {Button} from "react-bootstrap";
+
+class SmallerSubnetsV4 extends React.Component {
+
+    smallSubnetButtonClickHandler = (event) =>{
+        this.props.onClickHandlerButton(event.target.value);
+    }
+
+    render = () => {
+        console.log('SmallerSubnetsV4 - render');
+        console.log(this.props.smallerSubnetsData);
+        return (
+            <div>
+                {Object.values(this.props.smallerSubnetsData).map((smallerSubnet, index) => (
+                    <div className={styles.smallerSubnetCard} key={Math.pow(index,2).toString()}>
+                        <ol key={Math.pow(index,3).toString()}>
+                            {Object.values(smallerSubnet).map((subnet, indexx) => (
+                                <li key={indexx}><Button onClick={this.smallSubnetButtonClickHandler} key={subnet.subnet} variant="link"
+                                            value={subnet.subnet}>{subnet.subnet}</Button></li>
+                            ))}
+                        </ol>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+}
+
+export default SmallerSubnetsV4;
