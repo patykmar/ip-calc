@@ -2,8 +2,7 @@ import React from "react";
 import axios from "axios";
 import SubnetTableV4 from "./resultsTable/SubnetTableV4";
 import SearchForm from "./inputForm/SearchForm";
-import SmallerSubnetsV4 from "./resultsTable/SmallerSubnetsV4";
-import {useParams} from "react-router-dom";
+import SmallerSubnetsV4 from "./resultsTable/smallerSubnet/SmallerSubnetsV4";
 
 
 const OUTPUT_TABLE_DATA_V4 = {
@@ -176,11 +175,14 @@ class Ipv4Layout extends React.Component {
         if (enteredSubnet.trim().length < 4) {
             return;
         }
-        console.log("Logging from App.js - submittedSubnetFormHandler");
-        console.log(enteredSubnet);
         this.getApiSubnetInfo(enteredSubnet);
         this.getApiSmallerSubnets(enteredSubnet);
     };
+
+    smallerSubnetClickButtonHandler = (enteredSubnet) => {
+        this.getApiSubnetInfo(enteredSubnet);
+        this.getApiSmallerSubnets(enteredSubnet);
+    }
 
 
     render() {
@@ -199,6 +201,7 @@ class Ipv4Layout extends React.Component {
                         />
                     </div>
                     <SmallerSubnetsV4
+                        onClickHandlerButton={this.smallerSubnetClickButtonHandler}
                         smallerSubnetsData={this.state.smallerSubnet}
                     />
                 </div>
