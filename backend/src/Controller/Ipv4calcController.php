@@ -47,7 +47,6 @@ class Ipv4calcController extends AbstractController
 
         $subnetsArray = $this->ipv4subnetService->getSmallerSubnet(
             $ipv4Subnet,
-            $ipv4Subnet->ipv4Netmask->getCidr(),
             self::DEEP_INDEX
         );
 
@@ -70,15 +69,37 @@ class Ipv4calcController extends AbstractController
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
+        $jsonResponse = $this->json(
+            $this->ipv4subnetService->prepareJsonResponse(
+                $ipv4Subnet
+            ));
+
+        // allow access from all origin
+        $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
+
+        return $jsonResponse;
+    }
+
+    /**
+     * @Route("api/ipv4/smaller-subnets/{ip}", name="apiIpv4calc", requirements={"ip"=".+"}, defaults={"10.20.30.0/24"})
+     * @param string $ip
+     * @return Response
+     */
+    public function apiSmallerSubnet(string $enteredSubnet = "10.20.30.0/24"): Response
+    {
+        try {
+            $ipv4Subnet = new Ipv4subnet($enteredSubnet);
+        } catch (InvalidArgumentException $exception) {
+            $ipv4Subnet = new Ipv4subnet("11.22.33.0/24");
+        }
+
         $smallerSubnets = $this->ipv4subnetService->getSmallerSubnet(
             $ipv4Subnet,
-            $ipv4Subnet->ipv4Netmask->getCidr(),
             self::DEEP_INDEX
         );
 
         $jsonResponse = $this->json(
-            $this->ipv4subnetService->prepareJsonResponse(
-                $ipv4Subnet,
+            $this->ipv4subnetService->smallerSubnetJsonResponse(
                 $smallerSubnets
             ));
 
