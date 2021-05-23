@@ -45,17 +45,11 @@ class Ipv4calcController extends AbstractController
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
-        $subnetCird = $ipv4Subnet->ipv4Netmask->getCidr();
-        // calculate smaller subnets, in range /1 - /29 next 4 smaller subnet only
-        $subnetsArray = array();
-        $iterationCount = 0;
-        for ($i = ($subnetCird + 1); $i < 31; $i++) {
-            $subnetsArray[] = $this->ipv4subnetService->getSmallerSubnet($i, $ipv4Subnet);
-            $iterationCount++;
-            if ($iterationCount > self::DEEP_INDEX){
-                break;
-            }
-        }
+        $subnetsArray = $this->ipv4subnetService->getSmallerSubnet(
+            $ipv4Subnet,
+            $ipv4Subnet->ipv4Netmask->getCidr(),
+            self::DEEP_INDEX
+        );
 
         return $this->render('ipcalc/ipv4.html.twig', [
             'subnet' => $ipv4Subnet,
@@ -76,9 +70,17 @@ class Ipv4calcController extends AbstractController
             $ipv4Subnet = new Ipv4subnet("192.168.2.0/24");
         }
 
-        $jsonResponse = $this->json(
-            $this->ipv4subnetService->prepareJsonResponse($ipv4Subnet)
+        $smallerSubnets = $this->ipv4subnetService->getSmallerSubnet(
+            $ipv4Subnet,
+            $ipv4Subnet->ipv4Netmask->getCidr(),
+            self::DEEP_INDEX
         );
+
+        $jsonResponse = $this->json(
+            $this->ipv4subnetService->prepareJsonResponse(
+                $ipv4Subnet,
+                $smallerSubnets
+            ));
 
         // allow access from all origin
         $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
