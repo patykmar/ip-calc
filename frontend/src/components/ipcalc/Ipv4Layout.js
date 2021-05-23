@@ -16,6 +16,8 @@ const OUTPUT_TABLE_DATA_V4 = {
     "nsx-static-ip-pool": {key: "NSX Static IP pool:", value: "192.168.170.2-192.168.170.254"},
 };
 
+const API_URL = "http://localhost:8000";
+
 
 class Ipv4Layout extends React.Component {
 
@@ -35,13 +37,38 @@ class Ipv4Layout extends React.Component {
         });
     }
 
-    getApiData = (enteredSubnet = "172.20.30.0/24") => {
+    getApiSubnetInfo = (enteredSubnet = "172.20.30.0/24") => {
         axios
-            .get(`http://localhost:8000/api/ipv4calc/${enteredSubnet}`)
+            .get(`${API_URL}/api/ipv4calc/${enteredSubnet}`)
             .then((res) => {
                 console.log("Logging Axios data from api");
                 console.log(res.data);
                 this.setState({
+                    ...,
+                    enteredSubnet: enteredSubnet,
+                    outputTableData: res.data,
+                });
+                console.log("Logging Axios data after api set");
+                console.log(this.state);
+            })
+            .catch((error) => {
+                console.log("Logging Axios Error");
+                console.log(error);
+                this.setState({
+                    enteredSubnet: enteredSubnet,
+                    outputTableData: OUTPUT_TABLE_DATA_V4,
+                });
+            });
+    }
+
+    getApiSmallerSubnets = (enteredSubnet = "10.22.33.0/24") => {
+        axios
+            .get(`http://localhost:8000/api/ipv4/smaller-subnets/${enteredSubnet}`)
+            .then((res) => {
+                console.log("Logging Axios data from api");
+                console.log(res.data);
+                this.setState({
+                    ...,
                     enteredSubnet: enteredSubnet,
                     outputTableData: res.data,
                 });
@@ -69,7 +96,7 @@ class Ipv4Layout extends React.Component {
         }
         console.log("Logging from App.js - submittedSubnetFormHandler");
         console.log(enteredSubnet);
-        this.getApiData(enteredSubnet);
+        this.getApiSubnetInfo(enteredSubnet);
     };
 
 
