@@ -42,7 +42,7 @@ class Ipv6addressService
                 if (strlen($hextet) == 0) {
                     for ($i = 0; $i <= $countOfMissingHextet; $i++)
                         $ipv6ArrayAddMissingZeros[] = "0000";
-                    // already added missing zeros in to IPv6 adderr, set variable to zero
+                    // already added missing zeros in to IPv6 address, set variable to zero
                     $countOfMissingHextet = 0;
                 } else {
                     $ipv6ArrayAddMissingZeros[] = $hextet;
