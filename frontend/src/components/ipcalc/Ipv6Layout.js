@@ -4,6 +4,8 @@ import axios from "axios";
 import SubnetTableV6 from "./resultsTable/SubnetTableV6";
 
 
+const API_URL = "http://localhost:8000/";
+
 const OUTPUT_TABLE_DATA_V6 = {
     "lookup-address": {key: "Lookup address:", value: "abc::/64"},
     "network-subnet": {key: "Network subnet:", value: "abc:0:0:0:0:0:0:0/64"},
@@ -11,7 +13,6 @@ const OUTPUT_TABLE_DATA_V6 = {
     "network-address": {key: "Network address:", value: "abc:0:0:0:0:0:0:0"},
     "last-address": {key: "Last address:", value: "abc:0:0:0:ffff:ffff:ffff:ffff"}
 }
-
 
 class Ipv6Layout extends React.Component {
 
@@ -34,7 +35,7 @@ class Ipv6Layout extends React.Component {
 
     getApiData = (enteredSubnet = "bcd::/64") => {
         axios
-            .get(`http://localhost:8000/api/ipv6calc/${enteredSubnet}`)
+            .get(`${API_URL}api/ipv6calc/${enteredSubnet}`)
             .then((res) => {
                 this.setState({
                     enteredSubnet: enteredSubnet,
