@@ -9,8 +9,6 @@ class SmallerSubnetsV4 extends React.Component {
     }
 
     render = () => {
-        console.log('SmallerSubnetsV4 - render');
-        console.log(this.props.smallerSubnetsData);
         return (
             <div>
                 {Object.values(this.props.smallerSubnetsData).map((smallerSubnet, index) => (

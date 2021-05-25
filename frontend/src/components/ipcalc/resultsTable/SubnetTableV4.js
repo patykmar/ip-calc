@@ -4,10 +4,6 @@ import SubnetTableRow from "./SubnetTableRow";
 class SubnetTableV4 extends React.Component {
 
     render = () => {
-        console.log("SubnetTableV4 - render");
-        console.log(this.props.outputTableData);
-        console.log(this.props.outputTableData['broadcast-address']);
-        console.log(this.props.outputTableData['broadcast-address']);
         return (
             <div className="col-lg-7 text-center text-lg-start">
                 <table className="table">
