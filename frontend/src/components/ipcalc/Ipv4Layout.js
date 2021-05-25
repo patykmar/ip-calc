@@ -4,6 +4,7 @@ import SubnetTableV4 from "./resultsTable/SubnetTableV4";
 import SearchForm from "./inputForm/SearchForm";
 import SmallerSubnetsV4 from "./resultsTable/smallerSubnet/SmallerSubnetsV4";
 
+const API_URL = "http://localhost:8000/";
 
 const OUTPUT_TABLE_DATA_V4 = {
     "network-subnet": {key: "Network subnet:", value: "192.168.170.0/24"},
@@ -92,9 +93,6 @@ const SMALLER_SUBNETS_V4 = {
     }
 };
 
-const API_URL = "http://localhost:8000";
-
-
 class Ipv4Layout extends React.Component {
 
     constructor(props) {
@@ -117,20 +115,20 @@ class Ipv4Layout extends React.Component {
 
     getApiSubnetInfo = (enteredSubnet = "172.20.30.0/24") => {
         axios
-            .get(`${API_URL}/api/ipv4calc/${enteredSubnet}`)
+            .get(`${API_URL}api/ipv4calc/${enteredSubnet}`)
             .then((res) => {
-                console.log("Logging Axios data from api");
-                console.log(res.data);
+                // console.log("Logging Axios data from api");
+                // console.log(res.data);
                 this.setState({
                     enteredSubnet: enteredSubnet,
                     outputTableData: res.data,
                 });
-                console.log("Logging Axios data after api set");
-                console.log(this.state);
+                // console.log("Logging Axios data after api set");
+                // console.log(this.state);
             })
             .catch((error) => {
-                console.log("Logging Axios Error");
-                console.log(error);
+                // console.log("Logging Axios Error");
+                // console.log(error);
                 this.setState({
                     enteredSubnet: enteredSubnet,
                     outputTableData: OUTPUT_TABLE_DATA_V4,
@@ -140,20 +138,20 @@ class Ipv4Layout extends React.Component {
 
     getApiSmallerSubnets = (enteredSubnet = "10.22.33.0/24") => {
         axios
-            .get(`${API_URL}/api/ipv4/smaller-subnets/${enteredSubnet}`)
+            .get(`${API_URL}api/ipv4/smaller-subnets/${enteredSubnet}`)
             .then((res) => {
-                console.log("Logging Axios data from api - getApiSmallerSubnets");
-                console.log(res.data);
+                // console.log("Logging Axios data from api - getApiSmallerSubnets");
+                // console.log(res.data);
                 this.setState({
                     enteredSubnet: enteredSubnet,
                     smallerSubnet: res.data,
                 });
-                console.log("Logging Axios data after api set - getApiSmallerSubnets");
-                console.log(this.state);
+                // console.log("Logging Axios data after api set - getApiSmallerSubnets");
+                // console.log(this.state);
             })
             .catch((error) => {
-                console.log("Logging Axios Error");
-                console.log(error);
+                // console.log("Logging Axios Error");
+                // console.log(error);
                 this.setState({
                     enteredSubnet: enteredSubnet,
                     smallerSubnet: SMALLER_SUBNETS_V4,
