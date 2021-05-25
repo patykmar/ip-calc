@@ -54,10 +54,4 @@ class Ipv6addressService
             return $ipv6Array;
         }
     }
-
-
-
-
-
-
 }
