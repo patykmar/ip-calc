@@ -6,6 +6,10 @@ namespace App\Services;
 
 class Ipv4netmaskService
 {
+    /**
+     * @param string $binaryNetmask netmask binary format
+     * @return string wildcard binary format
+     */
     public static function convertNetmaskToWildcard(string $binaryNetmask): string
     {
         $out_local = "";
