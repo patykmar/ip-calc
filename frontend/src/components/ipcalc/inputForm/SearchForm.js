@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "./Button";
+import {Button, Col, Form} from "react-bootstrap";
 
 export default class SearchForm extends React.Component {
 
@@ -29,30 +29,29 @@ export default class SearchForm extends React.Component {
 
     render() {
         return (
-            <div className="col-md-10 mx-auto col-lg-5">
-                <form
-                    className="p-4 p-md-5 border rounded-3 bg-light"
-                    onSubmit={this.submitFormHandle}
-                >
-                    <div className="form-floating mb-3">
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={this.state.subnet}
-                            name="subnet"
-                            onChange={this.subnetChangeHandler}
-                            id="floatingInput"
+            // <Form inline={true} onSubmit={this.submitFormHandle}>
+            <Form onSubmit={this.submitFormHandle}>
+                <Form.Row>
+                    <Col xs={7}>
+                        <Form.Label htmlFor="inlineFormInput" srOnly>
+                            {this.props.labelForm}
+                        </Form.Label>
+                        <Form.Control
+                            className="mb-2"
+                            id="inlineFormInput"
                             placeholder={this.props.placeholderForm}
+                            value={this.state.subnet}
+                            onChange={this.subnetChangeHandler}
                         />
-                        <label htmlFor="floatingInput">{this.props.labelForm}</label>
-                    </div>
-                    <Button type={"submit"}>Calculate</Button>
-                    <hr className="my-4"/>
-                    <small className="text-muted">
-                        By clicking Calculate, application recalculate your subnet.
-                    </small>
-                </form>
-            </div>
+                        <Form.Text className="text-muted">
+                            By clicking Calculate, application recalculate your subnet.
+                        </Form.Text>
+                    </Col>
+                    <Col xs={2}>
+                        <Button variant="primary" type="submit">Calculate</Button>
+                    </Col>
+                </Form.Row>
+            </Form>
         );
     }
 }
