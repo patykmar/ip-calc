@@ -3,6 +3,8 @@ import axios from "axios";
 import SubnetTableV4 from "./resultsTable/SubnetTableV4";
 import SearchForm from "./inputForm/SearchForm";
 import SmallerSubnetsV4 from "./resultsTable/smallerSubnet/SmallerSubnetsV4";
+import {Col, Container, Row} from "react-bootstrap";
+import TitleH1 from "./resultsTable/layout/TitleH1";
 
 const API_URL = "http://localhost:8000/";
 
@@ -180,26 +182,28 @@ class Ipv4Layout extends React.Component {
 
     render() {
         return (
-            <main>
-                <div className="container col-xl-10 col-xxl-8 px-4 py-5">
-                    <div className="row align-items-center g-lg-5 py-5">
-                        <h1 className="display-4 fw-bold lh-1 mb-3">IPv4 address calculator</h1>
-                        <SubnetTableV4
-                            outputTableData={this.state.outputTableData}
-                        />
+            <Container>
+                <TitleH1>IPv4 address calculator</TitleH1>
+                <Row>
+                    <Col>
                         <SearchForm
-                            placeholderForm="10.0.0.0/24"
+                            placeholderForm="192.168.170.0/24"
                             labelForm="IPv4 subnet"
                             formValue={this.state.enteredSubnet}
                             onSubmittedSubnetForm={this.submittedSubnetFormHandler}
                         />
-                    </div>
-                    <SmallerSubnetsV4
-                        onClickHandlerButton={this.smallerSubnetClickButtonHandler}
-                        smallerSubnetsData={this.state.smallerSubnet}
+                    </Col>
+                </Row>
+                <Row>
+                    <SubnetTableV4
+                        outputTableData={this.state.outputTableData}
                     />
-                </div>
-            </main>
+                </Row>
+                <SmallerSubnetsV4
+                    onClickHandlerButton={this.smallerSubnetClickButtonHandler}
+                    smallerSubnetsData={this.state.smallerSubnet}
+                />
+            </Container>
         );
 
     }

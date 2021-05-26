@@ -2,6 +2,8 @@ import SearchForm from "./inputForm/SearchForm";
 import React from "react";
 import axios from "axios";
 import SubnetTableV6 from "./resultsTable/SubnetTableV6";
+import {Container, Row} from "react-bootstrap";
+import TitleH1 from "./resultsTable/layout/TitleH1";
 
 
 const API_URL = "http://localhost:8000/";
@@ -68,20 +70,23 @@ class Ipv6Layout extends React.Component {
     render() {
         return (
             <main>
-                <div className="container col-xl-10 col-xxl-8 px-4 py-5">
-                    <div className="row align-items-center g-lg-5 py-5">
-                        <h1 className="display-4 fw-bold lh-1 mb-3">IPv6 address calculator</h1>
-                        <SubnetTableV6
-                            htmlH1="IPv6 address calculator"
-                            outputTableData={this.state.outputTableData}
-                        />
+                <Container>
+                    <TitleH1>IPv6 address calculator</TitleH1>
+                    <Row>
                         <SearchForm
                             placeholderForm="abc::/64"
                             labelForm="IPv6 subnet"
                             onSubmittedSubnetForm={this.submittedSubnetFormHandler}
                         />
-                    </div>
-                </div>
+                    </Row>
+                    <Row>
+                        <SubnetTableV6
+                            htmlH1="IPv6 address calculator"
+                            outputTableData={this.state.outputTableData}
+                        />
+
+                    </Row>
+                </Container>
             </main>
         );
 
