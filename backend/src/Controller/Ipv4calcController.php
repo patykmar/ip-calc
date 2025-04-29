@@ -9,34 +9,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class Ipv4calcController extends AbstractController
 {
     /** @var int how many smaller subnets will be calculate */
-    private const DEEP_INDEX = 4;
+    private const int DEEP_INDEX = 4;
+    private const string ACCESS_CONTROL_ALLOW_ORIGIN = '*';
 
-    /**
-     * @var Ipv4subnetService
-     */
-    private Ipv4subnetService $ipv4subnetService;
-
-    private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
-
-    /**
-     * IpcalcController constructor.
-     * @param Ipv4subnetService $ipv4subnetService
-     */
-    public function __construct(Ipv4subnetService $ipv4subnetService)
+    public function __construct(
+        private readonly Ipv4subnetService $ipv4subnetService
+    )
     {
-        $this->ipv4subnetService = $ipv4subnetService;
     }
 
-
-    /**
-     * @Route("ipv4calc/{ip}", name="ipv4calc", requirements={"ip"=".+"}, defaults={"192.168.1.0/24"})
-     * @param string $ip
-     * @return Response
-     */
+    #[Route("ipv4calc/{ip}", name: "ipv4calc", requirements: ["ip" => ".+"], defaults: ["192.168.1.0/24"])]
     public function versionFourCalc(string $ip = "192.168.1.0/24"): Response
     {
         try {
@@ -56,11 +41,7 @@ class Ipv4calcController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("api/ipv4calc/{ip}", name="apiIpv4calc", requirements={"ip"=".+"}, defaults={"192.168.1.0/24"})
-     * @param string $ip
-     * @return Response
-     */
+    #[Route("api/ipv4calc/{ip}", name: "apiIpv4calc", requirements: ["ip" => ".+"], defaults: ["192.168.1.0/24"])]
     public function apiVersionFourCalc(string $ip = "172.10.20.0/24"): Response
     {
         try {
@@ -80,11 +61,7 @@ class Ipv4calcController extends AbstractController
         return $jsonResponse;
     }
 
-    /**
-     * @Route("api/ipv4/smaller-subnets/{enteredSubnet}", name="apiIpv4SmallerSubnet", requirements={"enteredSubnet"=".+"}, defaults={"10.20.30.0/24"})
-     * @param string $enteredSubnet
-     * @return Response
-     */
+    #[Route("api/ipv4/smaller-subnets/{enteredSubnet}", name: "apiIpv4SmallerSubnet", requirements: ["enteredSubnet" => ".+"], defaults: ["10.20.30.0/24"])]
     public function apiSmallerSubnet(string $enteredSubnet = "10.20.30.0/24"): Response
     {
         try {

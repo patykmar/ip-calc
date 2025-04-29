@@ -11,28 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Ipv6calcController extends AbstractController
 {
+    private const string ACCESS_CONTROL_ALLOW_ORIGIN = '*';
 
-    private const ACCESS_CONTROL_ALLOW_ORIGIN = '*';
-
-    /**
-     * @var Ipv6subnetService
-     */
-    private Ipv6subnetService $ipv6subnetService;
-
-    /**
-     * Ipv6calcController constructor.
-     * @param Ipv6subnetService $ipv6subnetService
-     */
-    public function __construct(Ipv6subnetService $ipv6subnetService)
+    public function __construct(
+        private readonly Ipv6subnetService $ipv6subnetService
+    )
     {
-        $this->ipv6subnetService = $ipv6subnetService;
     }
 
-    /**
-     * @Route("/ipv6calc/{ip}", name="ipv6calc", requirements={"ip"=".+"}, defaults={"abc::/64"})
-     * @param string $ip
-     * @return Response
-     */
+    #[Route("ipv6calc/{ip}", name: "ipv6calc", requirements: ["ip" => ".+"], defaults: ["abc::/64"])]
     public function versionSixCalc(string $ip = "abc::/64"): Response
     {
         try {
@@ -46,12 +33,8 @@ class Ipv6calcController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/api/ipv6calc/{ip}", name="apiIpv6calc", requirements={"ip"=".+"}, defaults={"abc::/64"})
-     * @param string $ip
-     * @return Response
-     */
-    public function apiVersionSixCalc(string $ip = "abc::/64")
+    #[Route("/api/ipv6calc/{ip}", name: "apiIpv6calc", requirements: ["ip" => ".+"], defaults: ["abc::/64"])]
+    public function apiVersionSixCalc(string $ip = "abc::/64"): Response
     {
         try {
             $ipv6Subnet = new Ipv6subnet($ip);
