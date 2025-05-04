@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
-use App\Entity\IP\v4\Ipv4netmask;
-use App\Entity\IP\v4\Ipv4subnet;
+use App\Domain\Ip\v4\Ipv4netmask;
+use App\Domain\Ip\v4\Ipv4subnet;
 use App\Factories\Ipv4addressFactory;
 use InvalidArgumentException;
 
 class Ipv4subnetService
 {
-    public const IPV4_LAST_CIDR_NETWORK = 31;
+    public const int IPV4_LAST_CIDR_NETWORK = 31;
 
     /**
      * Based on IPv4 Subnet return array for JSON format
      * @param Ipv4subnet $ipv4subnet
-     * @return array
+     * @return array<string, array<string, int|string>>
      */
     public function prepareJsonResponse(Ipv4subnet $ipv4subnet): array
     {
@@ -60,8 +60,8 @@ class Ipv4subnetService
 
     /**
      * Remap smaller subnet to real value instead of return objects
-     * @param array $smallerSubnets
-     * @return array
+     * @param list<array<Ipv4subnet>> $smallerSubnets
+     * @return array<string, array<string, array<string, mixed>>>
      */
     public function smallerSubnetJsonResponse(array $smallerSubnets): array
     {
@@ -85,7 +85,7 @@ class Ipv4subnetService
      * as array of Ipv4subnet objects.
      * @param int $smallerCidr
      * @param Ipv4subnet $ipv4subnet
-     * @return array Description array of Ipv4subnet objects.
+     * @return array<Ipv4subnet> Description array of Ipv4subnet objects.
      */
     public function calculateSmallerSubnets(int $smallerCidr, Ipv4subnet $ipv4subnet): array
     {
@@ -123,7 +123,7 @@ class Ipv4subnetService
      * Generate smaller subnets as array of Ipv4subnet objects by default for next 5 CIDR value
      * @param Ipv4subnet $ipv4subnet
      * @param int $deepIndex
-     * @return array
+     * @return list<array<Ipv4subnet>>
      */
     public function getSmallerSubnet(Ipv4subnet $ipv4subnet, int $deepIndex = 4): array
     {

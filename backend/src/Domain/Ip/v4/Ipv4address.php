@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\IP\v4;
+namespace App\Domain\Ip\v4;
 
-use App\Entity\IP\Ip;
+use App\Domain\Ip\AbstractIpAddress;
 use InvalidArgumentException;
 
 /**
@@ -10,10 +10,10 @@ use InvalidArgumentException;
  *
  * @author Martin Patyk
  */
-class Ipv4address extends Ip
+class Ipv4address extends AbstractIpAddress
 {
     /** @var int how many numbers are in one IP address octet */
-    public const OCTET_LEN = 8;
+    public const int OCTET_LEN = 8;
 
     /** @var string Human readable address eg. 192.168.1.1 */
     private string $decadic;
@@ -68,7 +68,7 @@ class Ipv4address extends Ip
     }
 
     /**
-     * @param string address in dec format eg. 192.168.1.1
+     * @param string $addressDec in dec format eg. 192.168.1.1
      */
     protected function setDecadic(string $addressDec): self
     {
@@ -81,7 +81,7 @@ class Ipv4address extends Ip
      */
     protected function setInteger(): self
     {
-        $this->integer = bindec($this->getBinary());
+        $this->integer = (int)bindec($this->getBinary());
         return $this;
     }
 

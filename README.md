@@ -93,3 +93,11 @@ For example:
 * `npm` - [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm)
 * `composer` - [https://getcomposer.org/download/](https://getcomposer.org/download/)
 * `symfony` - [https://symfony.com/download](https://symfony.com/download)
+
+# CI
+
+## PHPStan
+
+```shell
+./vendor/bin/phpstan analyse src --memory-limit 256m --level 9
+```

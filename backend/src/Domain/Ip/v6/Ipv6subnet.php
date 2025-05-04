@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\IP\v6;
+namespace App\Domain\Ip\v6;
 
 use App\Factories\IPv6AddressFactory;
 use InvalidArgumentException;
@@ -37,7 +37,7 @@ class Ipv6subnet
         if (count($ipv6AddressAndMask) == 2) {
             try {
                 $this->ipv6Address = new Ipv6address($ipv6AddressAndMask[0]);
-                $this->ipv6Netmask = new Ipv6netmask($ipv6AddressAndMask[1]);
+                $this->ipv6Netmask = new Ipv6netmask((int)$ipv6AddressAndMask[1]);
 
                 $this->setIpv6NetworkAddress()
                     ->setIpv6LastAddress();

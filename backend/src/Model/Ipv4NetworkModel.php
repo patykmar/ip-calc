@@ -4,15 +4,15 @@
 namespace App\Model;
 
 
-
 class Ipv4NetworkModel
 {
     /**
      * @var integer how many iteration will be use in function getCidrAndNetwork()
      */
-    public const COUNT_OF_ITERATION = 5;
+    public const int COUNT_OF_ITERATION = 5;
 
-    public const CIDR_TO_NETWORK = array(
+    /** @var array<int, string> */
+    public const array CIDR_TO_NETWORK = array(
         1 => "128.0.0.0",
         2 => "192.0.0.0",
         3 => "224.0.0.0",
@@ -46,7 +46,9 @@ class Ipv4NetworkModel
         31 => "255.255.255.254",
         32 => "255.255.255.255"
     );
-    public const SLASH_CIDR_NETWORK = array(
+
+    /** @var array<int, string> */
+    public const array SLASH_CIDR_NETWORK = array(
         1 => "/1 - 128.0.0.0",
         2 => "/2 - 192.0.0.0",
         3 => "/3 - 224.0.0.0",
@@ -82,11 +84,10 @@ class Ipv4NetworkModel
     );
 
 
-
     /**
      * Based on CIDR number return array with smaller networks
      * @param int $cidr network CIDR number 1-32
-     * @return array List of network mask /[CIDR] - [Netmask]
+     * @return array<int, string> List of network mask /[CIDR] - [Netmask]
      */
     public static function getCidrAndNetwork(int $cidr): array
     {

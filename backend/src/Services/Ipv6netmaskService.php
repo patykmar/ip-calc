@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Entity\IP\v6\Ipv6address;
+use App\Domain\Ip\v6\Ipv6address;
 
 class Ipv6netmaskService extends Ipv6addressService
 {

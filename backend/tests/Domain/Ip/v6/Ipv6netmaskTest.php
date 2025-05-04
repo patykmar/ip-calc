@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Entity\IP\v6;
+namespace App\Tests\Domain\IP\v6;
 
-use App\Entity\IP\v6\Ipv6netmask;
+use App\Domain\Ip\v6\Ipv6netmask;
 use PHPUnit\Framework\TestCase;
 
 class Ipv6netmaskTest extends TestCase

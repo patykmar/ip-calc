@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Entity\IP\v6\Ipv6subnet;
+use App\Domain\Ip\v6\Ipv6subnet;
 
 class Ipv6subnetService
 {
@@ -12,7 +12,7 @@ class Ipv6subnetService
     /**
      * Based on IPv6 Subnet return array for JSON format
      * @param Ipv6subnet $ipv6subnet
-     * @return array
+     * @return array<string, array<string, string>>
      */
     public function prepareJsonResponse(Ipv6subnet $ipv6subnet): array
     {
