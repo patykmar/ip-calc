@@ -4,8 +4,8 @@
 namespace App\Factories;
 
 
-use App\Entity\IP\v4\Ipv4address;
-use App\Entity\IP\v4\Ipv4subnet;
+use App\Domain\Ip\v4\Ipv4address;
+use App\Domain\Ip\v4\Ipv4subnet;
 use InvalidArgumentException;
 
 class Ipv4addressFactory

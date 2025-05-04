@@ -4,12 +4,13 @@
 namespace App\Services;
 
 
-use App\Entity\IP\v6\Ipv6address;
+use App\Domain\Ip\v6\Ipv6address;
 
 class Ipv6addressService
 {
     /**
      * Convert IPv6 address from Hexa to Binary format. Only for internal purpose
+     * @param array<string> $ipv6Array
      * @return string binary number of IPv6 address
      */
     public static function hexToBin(array $ipv6Array): string
@@ -24,7 +25,7 @@ class Ipv6addressService
     /**
      * Convert IPv6 address to array splitted by colon
      * @param string $ipv6InHexaFormat Hexa format of IPv6 eg. abc::
-     * @return array array of
+     * @return array<string> array of
      */
     public static function hexToArray(string $ipv6InHexaFormat): array
     {

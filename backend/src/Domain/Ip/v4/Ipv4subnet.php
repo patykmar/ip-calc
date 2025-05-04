@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\IP\v4;
+namespace App\Domain\Ip\v4;
 
 use App\Factories\Ipv4addressFactory;
 use InvalidArgumentException;
@@ -48,7 +48,7 @@ class Ipv4subnet
                         'max_range' => Ipv4netmask::IPV4_NETMASK_CIDR_VALUE_MAX,
                     )))) {
                 $this->ipv4Address = new Ipv4address($ipv4SubnetArray[0]);
-                $this->ipv4Netmask = new Ipv4netmask($ipv4SubnetArray[1]);
+                $this->ipv4Netmask = new Ipv4netmask((int)$ipv4SubnetArray[1]);
 
                 $this->setNetworkAddress()
                     ->setBroadcastkAddress()

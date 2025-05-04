@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Entity\IP\v4;
+namespace App\Tests\Domain\IP\v4;
 
-use App\Entity\IP\v4\Ipv4subnet;
+use App\Domain\Ip\v4\Ipv4subnet;
 use PHPUnit\Framework\TestCase;
 
 final class Ipv4subnetTest extends TestCase

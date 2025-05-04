@@ -3,7 +3,7 @@
 
 namespace App\Factories;
 
-use App\Entity\IP\v6\Ipv6address;
+use App\Domain\Ip\v6\Ipv6address;
 use InvalidArgumentException;
 
 class IPv6AddressFactory

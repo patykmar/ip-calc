@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Entity\IP\v6;
+namespace App\Tests\Domain\IP\v6;
 
-use App\Entity\IP\v6\Ipv6subnet;
+use App\Domain\Ip\v6\Ipv6subnet;
 use PHPUnit\Framework\TestCase;
 
 class Ipv6subnetTest extends TestCase

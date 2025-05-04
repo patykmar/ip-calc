@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\IP\v6\Ipv6subnet;
+use App\Domain\Ip\v6\Ipv6subnet;
 use App\Services\Ipv6subnetService;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Services;
 
-use App\Entity\IP\v4\Ipv4subnet;
+use App\Domain\Ip\v4\Ipv4subnet;
 use App\Services\Ipv4subnetService;
 use PHPUnit\Framework\TestCase;
 

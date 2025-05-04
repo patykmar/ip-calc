@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\IP\v6;
+namespace App\Domain\Ip\v6;
 
 use App\Services\Ipv6netmaskService;
 use InvalidArgumentException;

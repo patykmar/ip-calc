@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\IP\v4\Ipv4subnet;
+use App\Domain\Ip\v4\Ipv4subnet;
 use App\Services\Ipv4subnetService;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +55,7 @@ class Ipv4calcController extends AbstractController
                 $ipv4Subnet
             ));
 
-        // allow access from all origin
+        // allow access from origins
         $jsonResponse->headers->set('Access-Control-Allow-Origin', self::ACCESS_CONTROL_ALLOW_ORIGIN);
 
         return $jsonResponse;

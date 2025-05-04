@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\IP\v6;
+namespace App\Domain\Ip\v6;
 
-use App\Entity\IP\Ip;
+use App\Domain\Ip\AbstractIpAddress;
 use App\Services\Ipv6addressService;
 use InvalidArgumentException;
 
@@ -11,16 +11,16 @@ use InvalidArgumentException;
  *
  * @author patykmar
  */
-class Ipv6address extends Ip
+class Ipv6address extends AbstractIpAddress
 {
     /** @var int binary length of IPv6 address */
-    public const IPV6_BIN_LEN = 128;
+    public const int IPV6_BIN_LEN = 128;
 
     /** @var int number of bits */
-    public const HEXTET_BIN_LEN = 16;
+    public const int HEXTET_BIN_LEN = 16;
 
     /** @var int total number of hextet in IPv6 address */
-    public const HEXTET_COUNT = 8;
+    public const int HEXTET_COUNT = 8;
 
     /** @var string IPv6 address in hexa format */
     private string $hexa = "";

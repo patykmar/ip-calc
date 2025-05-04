@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\IP\v4;
+namespace App\Domain\Ip\v4;
 
 
 use App\Model\Ipv4NetworkModel;
@@ -15,10 +15,10 @@ use InvalidArgumentException;
 class Ipv4netmask extends Ipv4address
 {
     /** @const int IPv4 netmask CIDR min int value */
-    public const IPV4_NETMASK_CIDR_VALUE_MIN = 1;
+    public const int IPV4_NETMASK_CIDR_VALUE_MIN = 1;
 
     /** @const int IPv4 netmask CIDR max int value */
-    public const IPV4_NETMASK_CIDR_VALUE_MAX = 32;
+    public const int IPV4_NETMASK_CIDR_VALUE_MAX = 32;
 
     /** @var int network mask in CIDR notation */
     private int $cidr;
@@ -60,7 +60,7 @@ class Ipv4netmask extends Ipv4address
      */
     private function setWildcardInt(): void
     {
-        $this->wildcardInt = bindec($this->getWildcard());
+        $this->wildcardInt = (int)bindec($this->getWildcard());
     }
 
     /**
